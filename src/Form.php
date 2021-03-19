@@ -12,9 +12,10 @@ class Form{
    /**
    * @name FileUpload
    * @describe 文件上传
+   * @param mixed $file post 字段
    * @return Array
    **/
-   public function FileUpload(){
+   public function FileUpload($file){
       $file = $this->request->file('test');
       $post = input('post.');
       if($file){
