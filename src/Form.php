@@ -17,9 +17,9 @@ class Form{
    **/
    public function FileUpload($file){
       $file = $this->request->file('test');
-      $post = input('post.');
+      $data = $this->request->instance()->post();
       if($file){
-         $info = $file->move(ROOT_PATH . 'produce' . DS . $post['path']);
+         $info = $file->move(ROOT_PATH . 'produce' . DS . $data['path']);
          if($info){
             return json([
                'ext' => $info->getExtension(),
