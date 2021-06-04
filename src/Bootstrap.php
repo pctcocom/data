@@ -9,7 +9,7 @@
 // | Author: zhangyajun <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-namespace think\paginator\driver;
+namespace Pctco\Data;
 
 use think\Paginator;
 
@@ -24,7 +24,7 @@ class Bootstrap extends Paginator
      * @param string $text
      * @return string
      */
-    protected function getPreviousButton(string $text = "&laquo;"): string
+    protected function getPreviousButton(string $text = "<i class=\"ui--icon--universal prev\"></i>"): string
     {
 
         if ($this->currentPage() <= 1) {
@@ -43,7 +43,7 @@ class Bootstrap extends Paginator
      * @param string $text
      * @return string
      */
-    protected function getNextButton(string $text = '&raquo;'): string
+    protected function getNextButton(string $text = "<i class=\"ui--icon--universal next\"></i>"): string
     {
         if (!$this->hasMore) {
             return $this->getDisabledTextWrapper($text);
@@ -121,7 +121,7 @@ class Bootstrap extends Paginator
                 );
             } else {
                 return sprintf(
-                    '<ul class="pagination">%s %s %s</ul>',
+                    '<ul>%s %s %s</ul>',
                     $this->getPreviousButton(),
                     $this->getLinks(),
                     $this->getNextButton()
