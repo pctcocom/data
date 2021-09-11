@@ -7,26 +7,26 @@ class Sitemap{
    /**
    * @name generate
    * @describe 生成 xml
-   * @param mixed $platform 平台 如： universal(baidu,so,bing),sogou(sogou_media（响应式站点）)
+   * @param mixed $platform 平台 如： sitemap(baidu,so,bing),sogou(media.sitemap.sogou.com（响应式站点）)
    * @param mixed $platform = baidu.com
    * @return
    **/
-   public function generate($data,$db = 'article',$changefreq = 'daily',$platform = 'universal'){
+   public function generate($data,$dbname = 'article',$changefreq = 'daily',$platform = 'sitemap'){
       $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
       $xml .= "<urlset>\n";
-      if ($platform === 'sogou_media') {
+      if ($platform === 'media.sitemap.sogou.com') {
          foreach ($data as $item) {
             $xml .= $this->SoGouMediaXml($item);
          }
       }
-      if ($platform === 'universal') {
+      if ($platform === 'sitemap') {
          foreach ($data as $item) {
             $xml .= $this->UniversalXml($item,$changefreq);
          }
       }
       $xml .= "</urlset>\n";
 
-      $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$db.'_'.$changefreq.'_'.$platform.'.xml';
+      $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$dbname.'_'.$changefreq.'_'.$platform.'.xml';
 
       $file = new \Naucon\File\FileWriter(app()->getRootPath().'entrance'.$path,'w+');
       $file->write($xml);
@@ -78,24 +78,56 @@ class Sitemap{
        $xml .= "</url>\n";
        return $xml;
    }
-   public function group($data){
-      return [
-         'count'   =>   count($data),
-         'platform'   =>   ['universal','sogou_media'],
-         'baidu.com'   =>   [
-            'url'   =>   ''
+   /**
+   * @name SaveXml
+   * @describe 保存 .xml 文件
+   * @param Array $data 数据
+   * @param String $dbname 数据库名称
+   * @return Array
+   **/
+   public function SaveXml($data,$dbname,$changefreq,$domain){
+      $count = count($data);
+      $arr = [
+         'sitemap.baidu.com'   =>   [
+            'url'   =>   '',
+            'name'   =>   'baidu',
+            'count'   =>   $count,
+            'submit'   =>   'https://ziyuan.baidu.com/'
          ],
-         'so.com'   =>   [
-            'url'   =>   ''
+         'sitemap.so.com'   =>   [
+            'url'   =>   '',
+            'name'   =>   'so',
+            'count'   =>   $count,
+            'submit'   =>   'https://zhanzhang.so.com/'
          ],
-         'bing.com'   =>   [
-            'url'   =>   ''
+         'sitemap.bing.com'   =>   [
+            'url'   =>   '',
+            'name'   =>   'bing',
+            'count'   =>   $count,
+            'submit'   =>   'https://www.bing.com/webmasters/'
          ],
-         'sogou.com'   =>   [
-            'media'   =>   [
-               'url'   =>   ''
-            ]
+         'media.sitemap.sogou.com'   =>   [
+            'url'   =>   '',
+            'name'   =>   'sogou',
+            'count'   =>   $count,
+            'submit'   =>   'https://zhanzhang.sogou.com/'
          ]
       ];
+
+      foreach (['sitemap','media.sitemap.sogou.com'] as $k) {
+         if ($k == 'sitemap') {
+            $sitemap = $this->generate($data,$dbname,$changefreq,$k);
+            $arr['sitemap.baidu.com']['url'] = $domain.$sitemap;
+            $arr['sitemap.so.com']['url'] = $domain.$sitemap;
+            $arr['sitemap.bing.com']['url'] = $domain.$sitemap;
+            $arr['sitemap.bing.com']['submit'] = 'https://www.bing.com/ping?sitemap='.$domain.$sitemap;
+         }
+         if ($k == 'media.sitemap.sogou.com') {
+            $media_sitemap_sogou_com = $this->generate($data,$dbname,$changefreq,$k);
+            $arr[$k]['url'] = $domain.$media_sitemap_sogou_com;
+         }
+      }
+
+      return $arr;
    }
 }
