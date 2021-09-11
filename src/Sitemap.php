@@ -26,8 +26,10 @@ class Sitemap{
       }
       $xml .= "</urlset>\n";
 
-      $path = '/static/library/xml/sitemap/'.$db.'_'.$changefreq.'_'.$platform.'.xml';
-      file_put_contents(app()->getRootPath().'entrance'.$path,$xml);
+      $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$db.'_'.$changefreq.'_'.$platform.'.xml';
+
+      $file = new \Naucon\File\FileWriter(app()->getRootPath().'entrance'.$path,'w+');
+      $file->write($xml);
 
       return $path;
    }
