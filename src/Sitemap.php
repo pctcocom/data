@@ -1,5 +1,6 @@
 <?php
 namespace Pctco\Data;
+use Pctco\Date\Query;
 /**
  * 搜索引擎数据索引
  */
@@ -26,7 +27,19 @@ class Sitemap{
       }
       $xml .= "</urlset>\n";
 
-      $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$dbname.'_'.$platform.'_'.date('Ymd',time()).'.xml';
+      switch ($changefreq) {
+         case 'daily':
+            $dname = 'daily_'.date('Ymd',time());
+            break;
+         case 'weekly':
+            $dname = 'week_'.date('Y').'_'.Query::interval(strtotime(date('Y-1-1 00:00:00')),'past-week');
+            break;
+         default:
+            return false;
+            break;
+      }
+
+      $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$dbname.'_'.$platform.'_'.$dname.'.xml';
 
       $file = new \Naucon\File\FileWriter(app()->getRootPath().'entrance'.$path,'w+');
       $file->write($xml);
