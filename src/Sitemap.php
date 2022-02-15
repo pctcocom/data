@@ -1,6 +1,5 @@
 <?php
 namespace Pctco\Data;
-use Pctco\Date\Query;
 /**
  * 搜索引擎数据索引
  */
@@ -32,7 +31,7 @@ class Sitemap{
             $dname = 'daily_'.date('Ymd',time());
             break;
          case 'weekly':
-            $dname = 'week_'.date('Y').'_'.Query::interval(strtotime(date('Y-1-1 00:00:00')),'past-week');
+            $dname = 'week_'.date('Y').'_'.(int)date('W');
             break;
          default:
             return false;
