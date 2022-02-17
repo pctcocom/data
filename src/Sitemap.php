@@ -40,9 +40,12 @@ class Sitemap{
 
       $path = DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'library'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'sitemap'.DIRECTORY_SEPARATOR.$dbname.'_'.$platform.'_'.$dname.'.xml';
 
-      $file = new \Naucon\File\FileWriter(app()->getRootPath().'entrance'.$path,'w+');
-      $file->write($xml);
-
+      $file = new \Naucon\File\File(app()->getRootPath().'entrance'.$path);
+      if ($file->exists() === false) {
+         $file = new \Naucon\File\FileWriter(app()->getRootPath().'entrance'.$path,'w+');
+         $file->write($xml);
+      }
+      
       return $path;
    }
    /**
