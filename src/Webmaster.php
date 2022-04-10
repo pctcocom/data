@@ -2,7 +2,7 @@
 namespace Pctco\Data;
 use think\facade\Request;
 /**
- * 数据
+ * 站长
  */
 class Webmaster{
     protected $request;
